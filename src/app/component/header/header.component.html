@@ -27,9 +27,15 @@
   <button mat-flat-button style="background-color: black;color: ghostwhite;">
     Bookings
   </button>
-  <button mat-flat-button style="background-color: black;color: ghostwhite;">
+  <button mat-flat-button
+  [mat-menu-trigger-for]="menu"
+  style="background-color: black; color: ghostwhite;">
     Profile
   </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/viewprofile">View</button>
+    <button mat-menu-item routerLink="/logout">Logout</button>
+  </mat-menu>
 
 </div>
 </mat-toolbar>
