@@ -5,7 +5,7 @@
 //   const Admin = Convert.toAdmin(json);
 
 export interface Admin {
-    admin_id:           string;
+    admin_id:           number;
     adminn_email:       string;
     admin_password:     string;
     admin_fname:        string;

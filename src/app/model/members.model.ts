@@ -5,7 +5,7 @@
 //   const Member = Convert.toMember(json);
 
 export interface Member {
-    member_id:    string;
+    member_id:    number;
     title:        string;
     first_name:   string;
     last_name:    string;

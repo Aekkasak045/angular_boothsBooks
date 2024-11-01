@@ -5,16 +5,16 @@
 //   const Bookings = Convert.toBookings(json);
 
 export interface Bookings {
-    booking_id:     string;
+    booking_id:     number;
     booking_date:   string;
     payment_date:   null | string;
-    booth_id:       string;
+    booth_id:       number;
     booth_price:    string;
     payment_slip:   null | string;
     booking_status: string;
     product_info:   string;
-    member_id:      string;
-    event_id:       string;
+    member_id:      number;
+    event_id:       number;
 }
 
 // Converts JSON strings to/from your types

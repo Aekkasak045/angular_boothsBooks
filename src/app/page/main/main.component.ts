@@ -32,4 +32,7 @@ export class MainComponent  {
         this.zones=zonesCvt.toZones(JSON.stringify(data))
         console.log("zonena",this.zones)      });
   }
+  viewDetail(zoneId: number): void {
+    console.log("Selected Zone ID:", zoneId);
+  }
 }

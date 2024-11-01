@@ -2,10 +2,17 @@
 
   <div class="container">
     <div class="zone-container">
-      <div class="zone-box"*ngFor="let zone of this.zones">
-        <h3>{{ zone.zone_name }}</h3>
-        <p>Info: {{ zone.zone_info }}</p>
-        <p>Booth Count: {{ zone.booth_count }}</p>
+      <div class="zone-box" *ngFor="let zone of this.zones" >
+        <div class="row">
+          <div class="col-sm-6">
+            <h3>{{ zone.zone_name }}</h3>
+            <p>Info: {{ zone.zone_info }}</p>
+            <p>Booth Count: {{ zone.booth_count }}</p>
+          </div>
+          <div class="col-sm-6">
+            <button (click)="viewDetail(zone.zone_id)">Detail</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
