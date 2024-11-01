@@ -4,7 +4,7 @@
 //
 //   const Zone = Convert.toZone(json);
 
-export interface Zone {
+export interface Zones {
     zone_id:     string;
     zone_name:   string;
     zone_info:   string;
@@ -14,11 +14,11 @@ export interface Zone {
 
 // Converts JSON strings to/from your types
 export class Convert {
-    public static toZone(json: string): Zone[] {
+    public static toZones(json: string): Zones[] {
         return JSON.parse(json);
     }
 
-    public static ZoneToJson(value: Zone[]): string {
+    public static ZonesToJson(value: Zones[]): string {
         return JSON.stringify(value);
     }
 }

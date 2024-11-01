@@ -1,0 +1,17 @@
+.zone-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .zone-box {
+    flex: 1 1 calc(33.33% - 16px); /* Three boxes per row */
+    border: 1px solid #ccc;
+    padding: 16px;
+    box-sizing: border-box;
+    padding-bottom: 16px;
+    padding-top: 10px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+  }
+  
