@@ -1,12 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { DataService } from '../../service/data.service';
+import { CommonModule } from '@angular/common';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-editbooth',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, MatDialogModule, FormsModule,HttpClientModule],
   templateUrl: './editbooth.component.html',
-  styleUrl: './editbooth.component.scss'
+  styleUrls: ['./editbooth.component.scss']
 })
-export class EditboothComponent {
+export class EditBoothComponent implements OnInit {
+  boothData = { booth_name: '', booth_size: '', booth_price: 0, booth_status: 'ว่าง' };
 
+  constructor(
+    public dialogRef: MatDialogRef<EditBoothComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { boothId: number },
+    private dataService: DataService,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit(): void {
+    this.loadBoothData(this.data.boothId);
+  }
+  
+  loadBoothData(boothId: number): void {
+    this.http.get(`${this.dataService.apiEndpoint}/get_booth/${boothId}`).subscribe(
+      (data: any) => {
+        this.boothData = { ...data }; // แสดงข้อมูลที่โหลดในฟอร์ม
+      },
+      (error) => {
+        console.error("Error loading booth data:", error);
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลบูธ");
+      }
+    );
+  }
+
+  save(): void {
+    this.http.put(`${this.dataService.apiEndpoint}/update_booth/${this.data.boothId}`, this.boothData).subscribe(
+      () => {
+        alert('แก้ไขบูธสำเร็จ');
+        this.dialogRef.close('updated');
+      },
+      (error) => {
+        console.error('Error updating booth:', error);
+        alert('เกิดข้อผิดพลาดในการแก้ไขบูธ');
+      }
+    );
+  }
+
+  close(): void {
+    this.dialogRef.close();
+  }
 }

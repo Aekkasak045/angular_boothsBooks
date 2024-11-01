@@ -12,8 +12,8 @@
           </div>
           <div class="col-sm-4">
             <button class="btn_book" >จอง</button><br>
-            <button class="btn_edit" >แก้ไข</button><br>
-            <button class="btn_del" >ลบ</button>
+            <button class="btn_edit" (click)="editBooth(booth.booth_id)">แก้ไข</button><br>
+            <button class="btn_del" (click)="deleteBooth(booth.booth_id)">ลบ</button>
           </div>
         </div>
       </div>

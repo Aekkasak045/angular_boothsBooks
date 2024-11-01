@@ -11,7 +11,7 @@ import { json } from 'stream/consumers';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-
+import { EditBoothComponent } from '../editbooth/editbooth.component';
 @Component({
   selector: 'app-boothpage',
   standalone: true,
@@ -25,13 +25,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './boothpage.component.scss'
 })
 export class BoothpageComponent {
-  booths = Array<Booths>();
+  booths: Booths[] = [];
   zoneId: number | null = null;
 
   constructor(
     private dataService: DataService,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute, 
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -56,5 +57,30 @@ export class BoothpageComponent {
         console.error("Error loading booths:", error);
       }
     );
+  }
+  editBooth(boothId: number): void {
+    const dialogRef = this.dialog.open(EditBoothComponent, {
+      data: { boothId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'updated') {
+        this.loadBooths(); // โหลดข้อมูลบูธใหม่หลังจากการแก้ไข
+      }
+    });
+  }
+  deleteBooth(boothId: number): void {
+    if (confirm("คุณแน่ใจหรือไม่ว่าจะลบบูธนี้?")) {
+      this.http.delete(`${this.dataService.apiEndpoint}/delete_booth/${boothId}`).subscribe(
+        () => {
+          alert('ลบบูธเรียบร้อย');
+          this.loadBooths(); // โหลดข้อมูลบูธใหม่หลังจากการลบ
+        },
+        (error) => {
+          console.error("Error deleting booth:", error);
+          alert('เกิดข้อผิดพลาดในการลบบูธ');
+        }
+      );
+    }
   }
 }
