@@ -5,46 +5,70 @@ import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field'; 
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-editzone',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, FormsModule],
+  imports: [
+    CommonModule, 
+    MatDialogModule, 
+    FormsModule, 
+    ReactiveFormsModule, 
+    MatFormFieldModule, 
+    MatInputModule
+  ],
   templateUrl: './editzone.component.html',
   styleUrls: ['./editzone.component.scss']
 })
 export class EditzoneComponent implements OnInit {
-  zoneData = { zone_name: '', zone_info: '', booth_count: 0 };
+  zoneForm: FormGroup; // FormGroup to handle the zone form data
 
   constructor(
     public dialogRef: MatDialogRef<EditzoneComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { zoneId: number },
     private dataService: DataService,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
+  ) {
+    // Initialize the form with FormBuilder
+    this.zoneForm = this.fb.group({
+      zone_name: ['', Validators.required],
+      zone_info: ['', Validators.required],
+      booth_count: [0, [Validators.required, Validators.min(1)]]
+    });
+  }
 
-
-  
   ngOnInit(): void {
-    console.log("Received Zone ID:", this.data.zoneId); // ตรวจสอบว่า zoneId ถูกส่งมาถูกต้องหรือไม่
+    console.log("Received Zone ID:", this.data.zoneId);
     if (this.data.zoneId) {
-      this.loadZoneData(this.data.zoneId);
+      this.loadZoneData(this.data.zoneId); // Load zone data if zoneId is provided
     } else {
       alert("ไม่พบ zoneId กรุณาลองใหม่อีกครั้ง");
+      this.dialogRef.close(); // Close the dialog if no zoneId is found
     }
   }
-  
+
   loadZoneData(zoneId: number): void {
-    console.log("API URL:", `${this.dataService.apiEndpoint}/get_zone/${zoneId}`);
-    
-    // เรียก API เพื่อโหลดข้อมูลโซนตาม zoneId
+    const apiUrl = `${this.dataService.apiEndpoint}/get_zone/${zoneId}`;
+    console.log("API URL:", apiUrl);
+
+    // Fetch the zone data using the API
     this.http.get(`${this.dataService.apiEndpoint}/get_zone/${zoneId}`).subscribe(
       (data: any) => {
         console.log("Loaded Zone Data:", data);
         
-        // ตรวจสอบว่า data มีข้อมูลที่ถูกต้องหรือไม่
-        if (data && typeof data === 'object' && 'zone_name' in data && 'zone_info' in data) {
-          this.zoneData = { ...data }; // ใช้การกระจายข้อมูลเพื่อป้องกันกรณีไม่มีค่าที่ต้องการ
+        // Check if the data is in the expected format
+        if (data && 'zone_name' in data && 'zone_info' in data) {
+          this.zoneForm.patchValue({
+            zone_name: data.zone_name,
+            zone_info: data.zone_info,
+            booth_count: data.booth_count
+          });
         } else {
           console.error("Unexpected data format:", data);
           alert("รูปแบบข้อมูลที่ได้รับไม่ถูกต้อง");
@@ -55,24 +79,26 @@ export class EditzoneComponent implements OnInit {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูลโซน");
       }
     );
-}
-
+  }
 
   save(): void {
-    console.log("Zone Data to save:", this.zoneData); // ใช้ console log ตรวจสอบค่า zoneData
-    this.http.put(`${this.dataService.apiEndpoint}/update_zone/${this.data.zoneId}`, this.zoneData).subscribe(
+    if (this.zoneForm.invalid) {
+      this.snackBar.open('กรุณากรอกข้อมูลให้ครบถ้วน', 'ปิด', { duration: 3000 });
+      return;
+    }
+    this.http.put(`${this.dataService.apiEndpoint}/update_zone/${this.data.zoneId}`, this.zoneForm.value).subscribe(
       () => {
-        alert('แก้ไขโซนสำเร็จ');
+        this.snackBar.open('แก้ไขโซนสำเร็จ', 'ปิด', { duration: 3000 });
         this.dialogRef.close('updated');
       },
       (error) => {
         console.error('Error updating zone:', error);
-        alert('เกิดข้อผิดพลาดในการแก้ไขโซน');
+        this.snackBar.open('เกิดข้อผิดพลาดในการแก้ไขโซน', 'ปิด', { duration: 3000 });
       }
     );
   }
 
   close(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(); // Close the dialog without saving
   }
 }

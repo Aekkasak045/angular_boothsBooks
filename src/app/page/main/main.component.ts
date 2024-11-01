@@ -1,23 +1,21 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../component/header/header.component';
 import { FooterComponent } from '../../component/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
-import {MatDialogModule,MatDialog} from '@angular/material/dialog';
-import {MatListModule,MatListOption} from '@angular/material/list';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
 import { DataService } from '../../service/data.service';
-import { HttpClient } from '@angular/common/http';
-import { Convert as zonesCvt ,Zones } from '../../model/zones.model';
-import { Convert as boothsCvt,Booths } from '../../model/booths.moel';
-import { json } from 'stream/consumers';
+import { Convert as zonesCvt, Zones } from '../../model/zones.model';
+import { Convert as boothsCvt, Booths } from '../../model/booths.moel'; // Corrected import for booths.model
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { EditzoneComponent } from '../editzone/editzone.component';
 
-
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [HeaderComponent,
+  imports: [
+    HeaderComponent,
     FooterComponent,
     HttpClientModule,
     MatListModule,
@@ -25,21 +23,37 @@ import { EditzoneComponent } from '../editzone/editzone.component';
     RouterModule,
     EditzoneComponent,
     MatDialogModule
-
-    ],
+  ],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
-  
+  styleUrls: ['./main.component.scss'] // Fixed the key here to styleUrls
 })
-export class MainComponent  {
-  zones = Array<Zones>();
-  booths = Array<Booths>();
-  selectedzone:any;
-  constructor(private dataService:DataService ,private http:HttpClient,private dialog: MatDialog){
-    http.get(dataService.apiEndpoint+"/get_zones").subscribe((data:any)=>{
-        this.zones=zonesCvt.toZones(JSON.stringify(data))
-        console.log("zonena",this.zones)      });
+export class MainComponent implements OnInit {
+  zones: Zones[] = [];
+  booths: Booths[] = [];
+  selectedZone: any;
+
+  constructor(private dataService: DataService, private http: HttpClient, private dialog: MatDialog) {
+    this.http.get(this.dataService.apiEndpoint + '/get_zones/1').subscribe((data: any) => {
+      this.zones = zonesCvt.toZones(JSON.stringify(data));
+      console.log("Loaded Zones22222:", this.zones);
+    }, error => {
+      console.error("Error loading zones:", error);
+    });
   }
+
+  ngOnInit(): void {
+    this.loadZones(); // Load zones when the component initializes
+  }
+
+  loadZones(): void {
+    this.http.get(this.dataService.apiEndpoint + '/get_zones').subscribe((data: any) => {
+      this.zones = zonesCvt.toZones(JSON.stringify(data));
+      console.log("Loaded Zones:", this.zones);
+    }, error => {
+      console.error("Error loading zones:", error);
+    });
+  }
+
   viewDetail(zoneId: number): void {
     console.log("Selected Zone ID:", zoneId);
     this.http.get(`${this.dataService.apiEndpoint}/get_booths_by_zone/${zoneId}`).subscribe(
@@ -53,20 +67,34 @@ export class MainComponent  {
     );
   }
 
-  loadZones(): void {
-    this.http.get(this.dataService.apiEndpoint + '/get_zones').subscribe((data: any) => {
-      this.zones = zonesCvt.toZones(JSON.stringify(data));
-    });
-  }
   editZone(zoneId: number): void {
     const dialogRef = this.dialog.open(EditzoneComponent, {
       data: { zoneId }
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result === 'updated') {
-        this.loadZones();
+        this.loadZones(); // Reload zones if the edit was successful
       }
     });
   }
 
+  deleteZone(zoneId: number): void {
+    const confirmDelete = confirm('คุณแน่ใจว่าต้องการลบโซนนี้หรือไม่?'); // Confirmation dialog
+
+    if (confirmDelete) {
+      const apiUrl = `${this.dataService.apiEndpoint}/delete_zone/${zoneId}`;
+      this.http.delete(apiUrl).subscribe(
+        () => {
+          alert('ลบโซนสำเร็จ');
+          this.zones = this.zones.filter(zone => zone.zone_id !== zoneId); // Remove deleted zone from the array
+        },
+        (error) => {
+          console.error('Error deleting zone:', error);
+          alert('เกิดข้อผิดพลาดในการลบโซน');
+        }
+      );
+    }
+  }
+
 }
+
