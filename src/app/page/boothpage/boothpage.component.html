@@ -1,0 +1,23 @@
+<app-header></app-header>
+
+  <div class="container">
+    <div class="zone-container">
+      <div class="zone-box" *ngFor="let booth of this.booths" >
+        <div class="row">
+          <div class="col-sm-8">
+            <h3>{{ booth.booth_name }}</h3>
+            <p>ขนาด: {{ booth.booth_size }}</p>
+            <p>ราคา: {{ booth.booth_price }}</p>
+            <p>สถานะ: {{ booth.booth_status }}</p>
+          </div>
+          <div class="col-sm-4">
+            <button class="btn_book" >จอง</button><br>
+            <button class="btn_edit" >แก้ไข</button><br>
+            <button class="btn_del" >ลบ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<app-footer></app-footer>

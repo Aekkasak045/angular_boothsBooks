@@ -1,16 +1,19 @@
 <app-header></app-header>
 
   <div class="container">
+    <h2 class="titlezone" style="padding: 10px;">โซน</h2>
     <div class="zone-container">
       <div class="zone-box" *ngFor="let zone of this.zones" >
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-8">
             <h3>{{ zone.zone_name }}</h3>
             <p>Info: {{ zone.zone_info }}</p>
             <p>Booth Count: {{ zone.booth_count }}</p>
           </div>
-          <div class="col-sm-6">
-            <button (click)="viewDetail(zone.zone_id)">Detail</button>
+          <div class="col-sm-4">
+            <a [attr.href]="'/booths?zone_id=' + zone.zone_id" class="btn btn-primary w-100">บูธ</a><br>
+            <button class="btn_edit" (click)="editZone(zone.zone_id)">แก้ไข</button><br>
+            <button class="btn_del" (click)="viewDetail(zone.zone_id)">ลบ</button>
           </div>
         </div>
       </div>

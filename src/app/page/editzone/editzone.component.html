@@ -1,0 +1,18 @@
+<div style="display: flex; flex-direction: column; width: 400px; padding: 20px;">
+    <h2>แก้ไขข้อมูลโซน</h2>
+  
+    <label>ชื่อโซน:</label>
+    <input type="text" [(ngModel)]="zoneData.zone_name" class="form-control" />
+  
+    <label>ข้อมูลโซน:</label>
+    <textarea [(ngModel)]="zoneData.zone_info" class="form-control" rows="4"></textarea>
+  
+    <label>จำนวนบูธ:</label>
+    <input type="number" [(ngModel)]="zoneData.booth_count" class="form-control" />
+  
+    <div style="margin-top: 20px;">
+      <button (click)="save()" class="btn btn-primary">บันทึก</button>
+      <!-- <button (click)="close()" class="btn btn-secondary" style="margin-left: 10px;">ปิด</button> -->
+    </div>
+  </div>
+  

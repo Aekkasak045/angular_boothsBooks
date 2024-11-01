@@ -4,7 +4,7 @@
 //
 //   const Booth = Convert.toBooth(json);
 
-export interface Booth {
+export interface Booths {
     booth_id:     number;
     booth_name:   string;
     booth_size:   string;
@@ -15,11 +15,11 @@ export interface Booth {
 
 // Converts JSON strings to/from your types
 export class Convert {
-    public static toBooth(json: string): Booth[] {
+    public static toBooths(json: string): Booths[] {
         return JSON.parse(json);
     }
 
-    public static BoothToJson(value: Booth[]): string {
+    public static BoothToJson(value: Booths[]): string {
         return JSON.stringify(value);
     }
 }
