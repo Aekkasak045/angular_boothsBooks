@@ -12,7 +12,7 @@
   <span>&nbsp;KASAT FAIR</span>
 </div>
 <div>
-  <button mat-flat-button style="background-color: black; color: ghostwhite;" >
+  <button mat-flat-button style="background-color: black; color: ghostwhite;" routerLink="/">
     Home
   </button>
   <button mat-flat-button
@@ -28,11 +28,12 @@
     Bookings
   </button>
   <button mat-flat-button
-  [mat-menu-trigger-for]="menu"
+  [mat-menu-trigger-for]="account"
   style="background-color: black; color: ghostwhite;">
-    Profile
+    Account
   </button>
-  <mat-menu #menu="matMenu">
+  <mat-menu #account="matMenu">
+    <button mat-menu-item routerLink="/login">login</button>
     <button mat-menu-item routerLink="/viewprofile">View</button>
     <button mat-menu-item routerLink="/logout">Logout</button>
   </mat-menu>

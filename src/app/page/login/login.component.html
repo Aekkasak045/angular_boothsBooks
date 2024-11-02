@@ -1,0 +1,26 @@
+<div class="login-container">
+    <mat-card>
+      <mat-card-title>เข้าสู่ระบบ</mat-card-title>
+      <mat-divider></mat-divider>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <mat-form-field appearance="outline">
+          <mat-label>ชื่อผู้ใช้</mat-label>
+          <input matInput formControlName="username" required />
+          <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+            กรุณากรอกชื่อผู้ใช้
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>รหัสผ่าน</mat-label>
+          <input matInput type="password" formControlName="password" required />
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            กรุณากรอกรหัสผ่าน
+          </mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit">เข้าสู่ระบบ</button>
+      </form>
+    </mat-card>
+  </div>
+  

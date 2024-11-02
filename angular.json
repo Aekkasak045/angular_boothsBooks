@@ -72,10 +72,13 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "angular-boothsbook:build:production"
+              "buildTarget": "angular-boothsbook:build:production",
+              "proxyConfig": "proxy.conf.json"
+              
             },
             "development": {
-              "buildTarget": "angular-boothsbook:build:development"
+              "buildTarget": "angular-boothsbook:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
