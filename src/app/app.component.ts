@@ -13,10 +13,5 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent {
   title = 'angular-boothsbook';
-  constructor(private http:HttpClient){
-    let url = 'http://wag12.bowlab.net/api/get_zones';
-    this.http.get(url).subscribe(data=>{
-      console.log(data);
-    })
-  }
+  
 }
